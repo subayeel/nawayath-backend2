@@ -43,7 +43,7 @@ export const paymentVerification = async (req, res) => {
 			amount = "5000";
 			const {
 				data: { success },
-			} = await axios.post("http://localhost:4000/uploadownervalues", {
+			} = await axios.post("http://54.250.201.101:5001/uploadownervalues", {
 				formValues,
 				razorpay_payment_id,
 			});
@@ -54,7 +54,7 @@ export const paymentVerification = async (req, res) => {
 			amount = "200";
 			const {
 				data: { success },
-			} = await axios.post("http://localhost:4000/uploadplayervalues", {
+			} = await axios.post("http://54.250.201.101:5001/uploadplayervalues", {
 				formValues,
 				razorpay_payment_id,
 			});
