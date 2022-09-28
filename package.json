@@ -2,7 +2,7 @@
   "name": "nf_backend",
   "version": "1.0.0",
   "description": "Backend fo rnawayath Foundation",
-  "main": "index.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
     "test": "test"
