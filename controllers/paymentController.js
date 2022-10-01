@@ -49,7 +49,7 @@ export const paymentVerification = async (req, res) => {
 			});
 			console.log(success);
 		} else if (collectionName === "player") {
-			name = formValues.firstName;
+			name = formValues.firstName +" "+formValues.middleName+ " " + formValues.lastName;
 			phone = formValues.mobileNumber;
 			amount = "200";
 			const {
