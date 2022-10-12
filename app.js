@@ -37,6 +37,8 @@ app.post("/uploadplayervalues", async (req, res) => {
 			sportsClub: req.body.formValues.sportsClub,
 			educationInstitute: req.body.formValues.educationInstitute,
 			playerImageUrl: req.body.formValues.playerImageUrl,
+			shirtSize:req.body.formValues.shirtSize,
+			trouserSize:req.body.formValues.trouserSize,
 			razorpay_payment_id: req.body.razorpay_payment_id,
 		});
 		console.log("Document written with ID: ", docRef.id);
