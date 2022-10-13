@@ -1,4 +1,5 @@
 import express from "express";
+
 import { config } from "dotenv";
 import paymentRoute from "./routes/paymentRoutes.js";
 import cors from "cors";
@@ -8,6 +9,8 @@ config({ path: "./config/config.env" });
 
 export const app = express();
 
+const fast2sms = import('fast-two-sms')
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -15,65 +18,74 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api", paymentRoute);
 
 app.get("/api/getkey", (req, res) =>
-	res.status(200).json({ key: process.env.RAZORPAY_API_KEY })
+  res.status(200).json({ key: process.env.RAZORPAY_API_KEY })
 );
 
+app.post("/sendMessage", async(req, res) => {
+  const response = await fast2sms.sendMessage({
+    authorization: process.env.FAST2SMS_API_KEY,
+    message: req.body.message,
+    numbers: [req.body.phone],
+  });
+  res.send(response)
+});
+
 app.post("/uploadplayervalues", async (req, res) => {
-	try {
-		const docRef = await addDoc(collection(db, "playerDetails"), {
-			firstName: req.body.formValues.firstName,
-			middleName: req.body.formValues.middleName,
-			lastName: req.body.formValues.lastName,
-			mobileNumber: req.body.formValues.mobileNumber,
-			dob: req.body.formValues.dob,
-			nativeLoc: req.body.formValues.nativeLoc,
-			playerRole: req.body.formValues.playerRole,
-			playedNclBefore: req.body.formValues.playedNclBefore,
-			playedNcl1: req.body.formValues.playedNcl1,
-			playedNcl2: req.body.formValues.playedNcl2,
-			playedNcl3: req.body.formValues.playedNcl3,
-			playedNcl4: req.body.formValues.playedNcl4,
-			occupation: req.body.formValues.occupation,
-			sportsClub: req.body.formValues.sportsClub,
-			educationInstitute: req.body.formValues.educationInstitute,
-			playerImageUrl: req.body.formValues.playerImageUrl,
-			shirtSize:req.body.formValues.shirtSize,
-			trouserSize:req.body.formValues.trouserSize,
-			nawayathResidentBanglore:req.body.formValues.nawayathResidentBanglore,
-			razorpay_payment_id: req.body.razorpay_payment_id,
-		});
-		console.log("Document written with ID: ", docRef.id);
-		res.status(200).json({ docid: docRef.id, success: true });
-	} catch (error) {
-		console.log("UNSUCCESSFULL: " + error);
-	}
+  try {
+    const docRef = await addDoc(collection(db, "playerDetails"), {
+      firstName: req.body.formValues.firstName,
+      middleName: req.body.formValues.middleName,
+      lastName: req.body.formValues.lastName,
+      mobileNumber: req.body.formValues.mobileNumber,
+      dob: req.body.formValues.dob,
+      nativeLoc: req.body.formValues.nativeLoc,
+      playerRole: req.body.formValues.playerRole,
+      playedNclBefore: req.body.formValues.playedNclBefore,
+      playedNcl1: req.body.formValues.playedNcl1,
+      playedNcl2: req.body.formValues.playedNcl2,
+      playedNcl3: req.body.formValues.playedNcl3,
+      playedNcl4: req.body.formValues.playedNcl4,
+      occupation: req.body.formValues.occupation,
+      sportsClub: req.body.formValues.sportsClub,
+      educationInstitute: req.body.formValues.educationInstitute,
+      playerImageUrl: req.body.formValues.playerImageUrl,
+      shirtSize: req.body.formValues.shirtSize,
+      trouserSize: req.body.formValues.trouserSize,
+      nawayathResidentBanglore: req.body.formValues.nawayathResidentBanglore,
+      razorpay_payment_id: req.body.razorpay_payment_id,
+    });
+    console.log("Document written with ID: ", docRef.id);
+    res.status(200).json({ docid: docRef.id, success: true });
+  } catch (error) {
+    console.log("UNSUCCESSFULL: " + error);
+  }
 });
 
 app.post("/uploadownervalues", async (req, res) => {
-	try {
-		const docRef = await addDoc(collection(db, "ownerDetails"), {
-			teamName: req.body.formValues.teamName,
-			companyName: req.body.formValues.companyName,
-			businessNature: req.body.formValues.businessNature,
-			instaLink: req.body.formValues.instaLink,
-			ownerFullName: req.body.formValues.ownerFullName,
-			ownerContactNumber: req.body.formValues.ownerContactNumber,
-			ownerEmailId: req.body.formValues.ownerEmailId,
-			ownerPresentAddress: req.body.formValues.ownerPresentAddress,
-			ownerPermanentAddress: req.body.formValues.ownerPermanentAddress,
-			managerFullName: req.body.formValues.managerFullName,
-			managerContactNumber: req.body.formValues.managerContactNumber,
-			managerEmailId: req.body.formValues.managerEmailId,
-			managerPermanentAddress: req.body.formValues.managerPermanentAddress,
-			managerPresentAddress: req.body.formValues.managerPresentAddress,
-			ownerTeamLogo: req.body.formValues.ownerTeamLogo,
-			razorpay_payment_id: req.body.razorpay_payment_id,
-		});
-		console.log("Document written with ID: ", docRef.id);
-		res.status(200).json({ docid: docRef.id, success: true });
-	} catch (error) {
-		console.log("UNSUCCESSFULL: " + error);
-	}
+  try {
+    const docRef = await addDoc(collection(db, "ownerDetails"), {
+      teamName: req.body.formValues.teamName,
+      companyName: req.body.formValues.companyName,
+      businessNature: req.body.formValues.businessNature,
+      instaLink: req.body.formValues.instaLink,
+      ownerFullName: req.body.formValues.ownerFullName,
+      ownerContactNumber: req.body.formValues.ownerContactNumber,
+      ownerEmailId: req.body.formValues.ownerEmailId,
+      ownerPresentAddress: req.body.formValues.ownerPresentAddress,
+      ownerPermanentAddress: req.body.formValues.ownerPermanentAddress,
+      managerFullName: req.body.formValues.managerFullName,
+      managerContactNumber: req.body.formValues.managerContactNumber,
+      managerEmailId: req.body.formValues.managerEmailId,
+      managerPermanentAddress: req.body.formValues.managerPermanentAddress,
+      managerPresentAddress: req.body.formValues.managerPresentAddress,
+      ownerTeamLogo: req.body.formValues.ownerTeamLogo,
+      razorpay_payment_id: req.body.razorpay_payment_id,
+    });
+    console.log("Document written with ID: ", docRef.id);
+    res.status(200).json({ docid: docRef.id, success: true });
+  } catch (error) {
+    console.log("UNSUCCESSFULL: " + error);
+  }
 });
 
 // const storageRef = ref(

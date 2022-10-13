@@ -5,68 +5,98 @@ import axios from "axios";
 var formValues = {};
 var collectionName = "";
 export const checkout = async (req, res) => {
-	formValues = req.body.formValues;
-	collectionName = req.body.collectionName;
-	const options = {
-		amount: Number(req.body.amount * 100),
-		currency: "INR",
-	};
-	const order = await instance.orders.create(options);
+  formValues = req.body.formValues;
+  collectionName = req.body.collectionName;
+  const options = {
+    amount: Number(req.body.amount * 100),
+    currency: "INR",
+  };
+  const order = await instance.orders.create(options);
 
-	res.status(200).json({
-		success: true,
-		order,
-	});
+  res.status(200).json({
+    success: true,
+    order,
+  });
 };
 
 export const paymentVerification = async (req, res) => {
-	const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
-		req.body;
-	console.log(req.body);
-	const body = razorpay_order_id + "|" + razorpay_payment_id;
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
+    req.body;
+  console.log(req.body);
+  const body = razorpay_order_id + "|" + razorpay_payment_id;
 
-	const expectedSignature = crypto
-		.createHmac("sha256", process.env.RAZORPAY_APT_SECRET)
-		.update(body.toString())
-		.digest("hex");
+  const expectedSignature = crypto
+    .createHmac("sha256", process.env.RAZORPAY_APT_SECRET)
+    .update(body.toString())
+    .digest("hex");
 
-	const isAuthentic = expectedSignature === razorpay_signature;
+  const isAuthentic = expectedSignature === razorpay_signature;
 
-	if (isAuthentic) {
-		var name = "";
-		var phone = "";
-		var amount = "";
-		// Database comes here
-		if (collectionName === "owner") {
-			name = formValues.ownerFullName;
-			phone = formValues.ownerContactNumber;
-			amount = "10000";
-			const {
-				data: { success },
-			} = await axios.post("http://54.250.201.101:5006/uploadownervalues", {
-				formValues,
-				razorpay_payment_id,
-			});
-			console.log(success);
-		} else if (collectionName === "player") {
-			name = formValues.firstName +" "+formValues.middleName+ " " + formValues.lastName;
-			phone = formValues.mobileNumber;
-			amount = "200";
-			const {
-				data: { success },
-			} = await axios.post("http://54.250.201.101:5006/uploadplayervalues", {
-				formValues,
-				razorpay_payment_id,
-			});
-			console.log(success);
-		}
-
-		res.redirect(
-			`http://nawayathfoundation.com/paymentsuccess?reference=${razorpay_payment_id}&name=${name}&phone=${phone}&amount=${amount}`
-		);
-	} else {
-		res.status(400).json({
-			success: false,
-		});
+  if (isAuthentic) {
+    var name = "";
+    var phone = "";
+    var amount = "";
+    var message = "NAWAYATH FOUNDATION - Payment successful";
+    // Database comes here
+    if (collectionName === "owner") {
+      name = formValues.ownerFullName;
+      phone = formValues.ownerContactNumber;
+      amount = "10000";
+      message =
+        message +
+        "Your payment verfication Id is " +
+        razorpay_payment_id +
+        " for the amount of " +
+        amount +
+        ".";
+      const {
+        data: { success },
+      } = await axios.post("http://54.250.201.101:5006/uploadownervalues", {
+        formValues,
+        razorpay_payment_id,
+      });
+      console.log(success);
+    } else if (collectionName === "player") {
+      name =
+        formValues.firstName +
+        " " +
+        formValues.middleName +
+        " " +
+        formValues.lastName;
+      phone = formValues.mobileNumber;
+      amount = "200";
+      message =
+        message +
+        "Your payment verfication Id is " +
+        razorpay_payment_id +
+        " for the amount of " +
+        amount +
+        ".";
+      const {
+        data: { success },
+      } = await axios.post("http://54.250.201.101:5006/uploadplayervalues", {
+        formValues,
+        razorpay_payment_id,
+      });
+      console.log(success);
+    }
+    try {
+      const {
+        data: { success },
+      } = await axios.post("http://54.250.201.101:5006/sendMessage", {
+        phone,
+        message,
+      });
+    } catch (err) {
+		console.log("message not sent")
 	}
+
+    res.redirect(
+      `http://nawayathfoundation.com/paymentsuccess?reference=${razorpay_payment_id}&name=${name}&phone=${phone}&amount=${amount}`
+    );
+  } else {
+    res.status(400).json({
+      success: false,
+    });
+  }
 };
