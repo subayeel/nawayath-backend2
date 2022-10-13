@@ -39,6 +39,7 @@ app.post("/uploadplayervalues", async (req, res) => {
 			playerImageUrl: req.body.formValues.playerImageUrl,
 			shirtSize:req.body.formValues.shirtSize,
 			trouserSize:req.body.formValues.trouserSize,
+			nawayathResidentBanglore:req.body.formValues.nawayathResidentBanglore,
 			razorpay_payment_id: req.body.razorpay_payment_id,
 		});
 		console.log("Document written with ID: ", docRef.id);
