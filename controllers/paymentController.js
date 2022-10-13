@@ -36,19 +36,13 @@ export const paymentVerification = async (req, res) => {
     var name = "";
     var phone = "";
     var amount = "";
-    var message = "NAWAYATH FOUNDATION - Payment successful";
+    
     // Database comes here
     if (collectionName === "owner") {
       name = formValues.ownerFullName;
       phone = formValues.ownerContactNumber;
       amount = "10000";
-      message =
-        message +
-        "Your payment verfication Id is " +
-        razorpay_payment_id +
-        " for the amount of " +
-        amount +
-        ".";
+      
       const {
         data: { success },
       } = await axios.post("http://54.250.201.101:5006/uploadownervalues", {
@@ -64,14 +58,8 @@ export const paymentVerification = async (req, res) => {
         " " +
         formValues.lastName;
       phone = formValues.mobileNumber;
-      amount = "200";
-      message =
-        message +
-        "Your payment verfication Id is " +
-        razorpay_payment_id +
-        " for the amount of " +
-        amount +
-        ".";
+      amount = "199";
+      
       const {
         data: { success },
       } = await axios.post("http://54.250.201.101:5006/uploadplayervalues", {
