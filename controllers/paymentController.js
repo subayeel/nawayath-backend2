@@ -40,7 +40,7 @@ export const paymentVerification = async (req, res) => {
 		if (collectionName === "owner") {
 			name = formValues.ownerFullName;
 			phone = formValues.ownerContactNumber;
-			amount = "5000";
+			amount = "10000";
 			const {
 				data: { success },
 			} = await axios.post("http://54.250.201.101:5006/uploadownervalues", {
