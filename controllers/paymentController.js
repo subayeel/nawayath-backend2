@@ -58,7 +58,7 @@ export const paymentVerification = async (req, res) => {
         " " +
         formValues.lastName;
       phone = formValues.mobileNumber;
-      amount = "199";
+      amount = "200";
       
       const {
         data: { success },
