@@ -21,14 +21,7 @@ app.get("/api/getkey", (req, res) =>
   res.status(200).json({ key: process.env.RAZORPAY_API_KEY })
 );
 
-app.post("/sendMessage", async(req, res) => {
-  const response = await fast2sms.sendMessage({
-    authorization: process.env.FAST2SMS_API_KEY,
-    message: req.body.message,
-    numbers: [req.body.phone],
-  });
-  res.send(response)
-});
+
 
 app.post("/uploadplayervalues", async (req, res) => {
   try {

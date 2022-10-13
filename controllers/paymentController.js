@@ -80,17 +80,7 @@ export const paymentVerification = async (req, res) => {
       });
       console.log(success);
     }
-    try {
-      const {
-        data: { response },
-      } = await axios.post("http://54.250.201.101:5006/sendMessage", {
-        phone,
-        message,
-      });
-	  console.log(response)
-    } catch (err) {
-		console.log("message not sent")
-	}
+    
 
     res.redirect(
       `http://nawayathfoundation.com/paymentsuccess?reference=${razorpay_payment_id}&name=${name}&phone=${phone}&amount=${amount}`
